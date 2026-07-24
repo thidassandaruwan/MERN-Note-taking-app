@@ -3,7 +3,7 @@ import express, { response } from "express";
 const app = express();
 
 app.get("/api/notes", (req, res) => {
-    res.send("You've got 5 notes!");
+    res.status(200).send("You've got 25 notes!");
 });
 
 app.listen(5001, ()=>{
