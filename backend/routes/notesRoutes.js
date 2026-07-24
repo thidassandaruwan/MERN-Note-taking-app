@@ -1,26 +1,16 @@
 import express from "express";
+import { createNote, deleteNote, getAllNotes, updateNote } from "../controllers/notesController.js";
 
 const router = express.Router(); 
 
-router.get("/", (req, res) => {
-    res.status(200).send("You've got 10 notes!");
-});
+router.get("/", getAllNotes);
 
-router.post("/", (req, res) => {
-                    // response is sent in json format
-    res.status(201).json({message:"Note created successfully!"});
-});             // 201 is http status code for Successfull creation
+router.post("/", createNote);             
 
-                // id here would be the id of the note the client want to UPDATE, when client sends a update requests, the program would fetch the note id and send it with the endpoint
-router.put("/:id", (req, res) => {
-                    // response is sent in json format
-    res.status(200).json({message:"Note updated successfully!"});
-});
+// id here would be the id of the note the client want to UPDATE, when client sends a update requests, the program would fetch the note id and send it with the endpoint
+router.put("/:id", updateNote);
 
-router.delete("/:id", (req, res) => {
-                    // response is sent in json format
-    res.status(200).json({message:"Note deleted successfully!"});
-});
+router.delete("/:id", deleteNote);
 
 
 export default router;
