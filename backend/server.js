@@ -1,10 +1,11 @@
 import express, { response } from "express";
+import notesRoutes from "./routes/notesRoutes.js";
 
 const app = express();
 
-app.get("/api/notes", (req, res) => {
-    res.status(200).send("You've got 25 notes!");
-});
+// if the server request starts with /api/notes/ hit the notesRoutes file
+app.use("/api/notes", notesRoutes);
+
 
 app.listen(5001, ()=>{
     console.log("Server started on PORT 5001");
