@@ -8,6 +8,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+// used for passing in values with the request 
+app.use(express.json());
+
 // if the server request starts with /api/notes/ hit the notesRoutes file
 app.use("/api/notes", notesRoutes);
 
