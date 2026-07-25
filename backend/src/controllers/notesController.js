@@ -28,10 +28,10 @@ export async function createNote(req, res){
         // since the Keys for title, and content are also "title", "content"
         // we can skip the {title:title, contenet:content}
         // and just put {title, content}
-        const newNote = new Note({title, content});  
+        const note = new Note({title, content});  
         
-        await newNote.save();
-        res.status(201).json({message:"Note Created Successfully!"});
+        const savedNote = await note.save();
+        res.status(201).json(savedNote);
     } 
     catch (error) {
         console.error("Error ! : " + error)
@@ -40,11 +40,36 @@ export async function createNote(req, res){
 }
 
 export async function updateNote(req, res){
-                    // response is sent in json format
-    res.status(200).json({message:"Note updated successfully!"});
+    try {
+        // geting the new content
+        const {title, content} = req.body;
+        // router.put("/:id", updateNote), id of the note the update request is being sent is embedded in the request URL
+        // the "id" is "named" in the url as "id", if it was /:noteID, the parameter finding method would be req.params.noteID
+
+        const updatedNote = await Note.findByIdAndUpdate(req.params.id, {title, content}, 
+            {returnDocument : "after"}
+        );
+
+        // if user has tried to update a note that doesn't exist
+        if (!updatedNote){ return res.status(404).json({message: `Note ${req.params.id} doesn't exit!`});}
+
+        res.status(200).json(updatedNote);
+    } 
+    catch (error) {
+        console.error("Error ! : " + error)
+        res.status(500).json({message : "Internal Server Error!"})
+    }
 }
 
 export async function deleteNote(req, res){
-                    // response is sent in json format
-    res.status(200).json({message:"Note deleted successfully!"});
+    try {
+        // mongoose findByIdAndDelet returns the object/data or "model" id deleted as a json
+        const deletedNote = await Note.findByIdAndDelete(req.params.id);
+        if (!deletedNote) { return res.status(404).json({message: `Note ${req.params.id} id not found!`});}
+
+        res.status(200).json(deletedNote);
+    } catch (error) {
+        console.error("Error ! : " + error)
+        res.status(500).json({message : "Internal Server Error!"})
+    }
 }
