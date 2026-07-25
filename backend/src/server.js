@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5001;
 
 // if the server request starts with /api/notes/ hit the notesRoutes file
 app.use("/api/notes", notesRoutes);
