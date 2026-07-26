@@ -8,11 +8,27 @@ import Note from "../model/Note.js";
 
 export async function getAllNotes(req, res){
     try {
-        // fetching all notes
-        const notes = await Note.find();
+        // fetching all notes           // sorting the results from newest to oldest
+        const notes = await Note.find().sort({createdAt : -1});
 
         // if no notes found
         if (notes.length == 0){res.status(200).json({message : "No Notes Found!"});}
+
+        res.status(200).json(notes);
+    } 
+    catch (error) {
+        console.error("Error ! : " + error)
+        res.status(500).json({message : "Internal Server Error!"})
+    }
+};
+
+export async function getNoteById(req, res){
+    try {
+        // fetching note for id
+        const notes = await Note.findById(req.params.id);
+
+        // if no notes found
+        if (!notes){ return res.status(404).json({message : "No Notes Found!"}); }
 
         res.status(200).json(notes);
     } 
@@ -68,7 +84,8 @@ export async function deleteNote(req, res){
         if (!deletedNote) { return res.status(404).json({message: `Note ${req.params.id} id not found!`});}
 
         res.status(200).json(deletedNote);
-    } catch (error) {
+    } 
+    catch (error) {
         console.error("Error ! : " + error)
         res.status(500).json({message : "Internal Server Error!"})
     }

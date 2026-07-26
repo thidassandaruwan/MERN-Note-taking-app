@@ -11,6 +11,18 @@ const PORT = process.env.PORT || 5001;
 // used for passing in values with the request 
 app.use(express.json());
 
+///////////////////////////////
+// OPTIONAL 
+// custom middleware
+app.use((req, res, next) => {
+    // currently just print out the reqest method and request url
+    console.log(`Request method ${req.method} & Request URL ${req.url}`)
+    next();
+    // with middlewares like app.use .post .get .. if you don't end the function with a reposnse you NEED to end the function
+    // with a next(); it's a way of telling express, that the function is done running and move on to the next router
+    // some methods automatically calls the next(), so we don't havet to
+});
+
 // if the server request starts with /api/notes/ hit the notesRoutes file
 app.use("/api/notes", notesRoutes);
 
