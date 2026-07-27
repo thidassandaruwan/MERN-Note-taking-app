@@ -1,19 +1,30 @@
-import express, { response } from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
+
 import notesRoutes from "./routes/notesRoutes.js";
 import { connectDB } from "./config/db.js";
-import dotenv from "dotenv";
 import rateLimiter from "./middleware/rateLimiter.js";
-import cors from "cors";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+// when a website tries to request from a another website in a seperate url/server/port the browser might block it for security reasons
+// when both frontend and backend are running in seperate ports the browser might block the API requests from frontend to backend as well 
+// it's called a CORSError
+// using corse() from cors library will allow ur server/backend/website to accept requets from other websties/servers/
+// in this case this allows our backend to accept requets from our frontend.
+// app.use(cors()) by default will allow any requests from any url/server/website
+// but we could be specific on which urls to allow within cors() 
+app.use(cors({
+    origin : "http://localhost:5173"
+}));
+
 // used for passing in values with the request 
 app.use(express.json());
 app.use(rateLimiter);
-app.use(cors)
 
 ///////////////////////////////
 // OPTIONAL 
