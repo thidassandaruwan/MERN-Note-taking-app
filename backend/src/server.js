@@ -3,6 +3,7 @@ import notesRoutes from "./routes/notesRoutes.js";
 import { connectDB } from "./config/db.js";
 import dotenv from "dotenv";
 import rateLimiter from "./middleware/rateLimiter.js";
+import cors from "cors";
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ const PORT = process.env.PORT || 5001;
 // used for passing in values with the request 
 app.use(express.json());
 app.use(rateLimiter);
+app.use(cors)
 
 ///////////////////////////////
 // OPTIONAL 
@@ -28,10 +30,12 @@ app.use((req, res, next) => {
 // if the server request starts with /api/notes/ hit the notesRoutes file
 app.use("/api/notes", notesRoutes);
 
-connectDB();
-
-
-app.listen(PORT, ()=>{
-    console.log("Server started on PORT 5001");
+// make is so that, Only when the database connection with mongoDB is established, 
+// start the app on port 5001
+connectDB().then( () => {
+    app.listen(PORT, ()=>{
+        console.log("Server started on PORT 5001");
+    }); 
 });
+
 
