@@ -1,6 +1,7 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
+import path from "path";
 
 import notesRoutes from "./routes/notesRoutes.js";
 import { connectDB } from "./config/db.js";
@@ -18,10 +19,12 @@ const PORT = process.env.PORT || 5001;
 // in this case this allows our backend to accept requets from our frontend.
 // app.use(cors()) by default will allow any requests from any url/server/website
 // but we could be specific on which urls to allow within cors() 
-app.use(cors({
-    origin : "http://localhost:5173"
-}));
-
+if (process.env.NODE_ENV !== "Production")
+{
+    app.use(cors({
+        origin : "http://localhost:5173"
+    }));
+}
 // used for passing in values with the request 
 app.use(express.json());
 app.use(rateLimiter);
@@ -40,6 +43,22 @@ app.use((req, res, next) => {
 
 // if the server request starts with /api/notes/ hit the notesRoutes file
 app.use("/api/notes", notesRoutes);
+
+// build script under frontEnd build a special , optimised and static version of the frontend application we developed.
+// we are asking the express to server users the frontend application in the same PORT as the backend as well
+// for that we are passing in the folder/directory name of that optimised frontend application
+// path.resolve() without arguments get the file path of the current working directory,
+const __dirname = path.resolve();
+// id the current state of the program is Production (this just a value saved in .env)
+if (process.env.NODE_ENV === "Production")
+{
+    app.use(express.static(path.join(__dirname, "../frontend/dist")));
+    // if we get any requests other than the pre defined routes in the program, 
+    // serve the prebuild index.html file
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+    });
+}
 
 // make is so that, Only when the database connection with mongoDB is established, 
 // start the app on port 5001
