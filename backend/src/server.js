@@ -50,7 +50,7 @@ app.use("/api/notes", notesRoutes);
 // path.resolve() without arguments get the file path of the current working directory,
 const __dirname = path.resolve();
 // id the current state of the program is Production (this just a value saved in .env)
-if (process.env.NODE_ENV === "Production")
+if (process.env.NODE_ENV === "production")
 {
     app.use(express.static(path.join(__dirname, "../frontend/dist")));
     // if we get any requests other than the pre defined routes in the program, 
