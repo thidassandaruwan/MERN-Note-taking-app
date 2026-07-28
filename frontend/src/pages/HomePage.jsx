@@ -55,7 +55,7 @@ const HomePage = () => {
         {loading && <div className="text-center text-primary  py-10">Loading Notes...</div>}
 
         {/* if no notes avaiable to shoq */}
-        {notes.length === 0 && !isRateLimited && <NotesNotFound/>}
+        {notes.length === 0 && !isRateLimited && !loading && <NotesNotFound/>}
 
         {/* if notes were retrived and we are not ratelimited */}
         {notes.length > 0 && !isRateLimited && (
