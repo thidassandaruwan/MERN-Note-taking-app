@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 5001;
 // in this case this allows our backend to accept requets from our frontend.
 // app.use(cors()) by default will allow any requests from any url/server/website
 // but we could be specific on which urls to allow within cors() 
-if (process.env.NODE_ENV !== "Production")
+if (process.env.NODE_ENV !== "production")
 {
     app.use(cors({
         origin : "http://localhost:5173"
